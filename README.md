@@ -63,7 +63,7 @@
     $ sot --watch .
 
 > while standing in your project.  
-> This while write the `bundle` file that we specified above whenever a file
+> This will write the `bundle` file that we specified above whenever a file
 > changes.
 
 # Important note

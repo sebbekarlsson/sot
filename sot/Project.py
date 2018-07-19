@@ -20,11 +20,8 @@ class Project(object):
         self.observer = Observer()
 
     def get_config(self):
-        return try_except(
-            lambda x: json.loads(read_and_close(self.config_path)),
-            ValueError,
-            lambda x: {}
-        )
+        return json.loads(read_and_close(self.config_path))\
+            if os.path.isfile(self.config_path) else None
 
     def get_transpilers(self):
         return try_except(

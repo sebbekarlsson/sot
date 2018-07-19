@@ -10,6 +10,17 @@ def watch():
 
     project = Project(path)
 
+    if not project.config:
+        print(
+            '{}{}{}'.format(
+                Colors.FAIL,
+                'Could not find any sot.json file',
+                Colors.ENDC
+            )
+        )
+
+        return
+
     print(
         '{}{}{}'.format(
             Colors.OKGREEN,

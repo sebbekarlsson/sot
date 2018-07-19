@@ -4,6 +4,10 @@ function nice_print(out) {
 
 function noop() {};
 
-function create(el) {
-    return document.createElement(el);
-}
+function createDivWithH1 () {
+    return HTML`
+        <div>
+            <h1>THIS IS A DIV WITH H1</h1>
+        </div>
+    `;
+};

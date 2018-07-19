@@ -16,12 +16,12 @@ class Project(object):
         self.path = path
         self.config_path = os.path.join(path, SOT_PROJECT_CONFIG)
         self.config = self.get_config()
-        self.watcher = Watcher(self)
+        self.watcher = Watcher(self, self.get_watch_patterns())
         self.observer = Observer()
 
     def get_config(self):
         return json.loads(read_and_close(self.config_path))\
-            if os.path.isfile(self.config_path) else None
+            if os.path.isfile(self.config_path) else {}
 
     def get_transpilers(self):
         return try_except(
@@ -46,6 +46,11 @@ class Project(object):
             KeyError,
             lambda x: None
         )
+
+    def get_watch_patterns(self):
+        config = self.get_config()
+
+        return config['watch'] if 'watch' in config else []
 
     def write_transpiled(self, filename, contents):
         with open(self.get_transpiled_name(filename), 'w+') as _file:

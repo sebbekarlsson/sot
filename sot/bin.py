@@ -24,7 +24,8 @@ def watch():
     print(
         '{}{}{}'.format(
             Colors.OKGREEN,
-            'SOT watchdog started',
+            'SOT watchdog started [{}]'.format(
+                ', '.join(project.get_watch_patterns())),
             Colors.ENDC
         )
     )

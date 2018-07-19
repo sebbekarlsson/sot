@@ -3,11 +3,12 @@ from sot.Colors import Colors
 
 
 class Watcher(PatternMatchingEventHandler):
-    patterns = ['*.js']
+    patterns = []
 
-    def __init__(self, project):
+    def __init__(self, project, watch_patterns):
         PatternMatchingEventHandler.__init__(self)
         self.project = project
+        self.patterns = watch_patterns
 
     def process_main_file(self, main_file):
         return self.project.transpile(main_file) if main_file else None

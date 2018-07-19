@@ -27,7 +27,7 @@
 ### Using SOT in your project
 > To use `SOT` in your project, you will need a `sot.json`
 > file in your project.  
-> Below is an example of when when being used in a javascript project:
+> Below is an example of when being used in a javascript project:
 
     {
         "main": "main.js",

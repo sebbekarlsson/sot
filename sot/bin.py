@@ -1,9 +1,24 @@
 import sys
+import os
 from sot.Project import Project
+from sot.Colors import Colors
 
 
 def watch():
-    Project(sys.argv[1] if len(sys.argv) > 1 else '.').start_watcher()
+    path = os.path.join(os.getcwd(), sys.argv[1]) if sys.argv[1][0] != '/'\
+        else sys.argv[1] if len(sys.argv) > 1 else os.getcwd()
+
+    project = Project(path)
+
+    print(
+        '{}{}{}'.format(
+            Colors.OKGREEN,
+            'SOT watchdog started',
+            Colors.ENDC
+        )
+    )
+
+    project.start_watcher()
 
 
 def run():

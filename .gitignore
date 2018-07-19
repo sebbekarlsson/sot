@@ -131,3 +131,5 @@ tags
 
 
 # End of https://www.gitignore.io/api/vim,python
+.*.sot
+bundle.js

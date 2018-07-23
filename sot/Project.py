@@ -34,17 +34,18 @@ class Project(object):
         )
 
     def get_main_file(self):
-        return try_except(
-            lambda x: os.path.join(self.path, self.get_config()['main']),
-            KeyError,
-            lambda x: None
-        )
+        return os.path.join(self.path, self.get_config_attr('main')) if\
+            self.get_config_attr('main') else None
 
     def get_output_file(self):
+        return os.path.join(self.path, self.get_config_attr('out')) if\
+            self.get_config_attr('out') else None
+
+    def get_config_attr(self, attribute, default=None):
         return try_except(
-            lambda x: os.path.join(self.path, self.get_config()['out']),
+            lambda x: self.get_config()[attribute],
             KeyError,
-            lambda x: None
+            lambda x: default
         )
 
     def get_watch_patterns(self):

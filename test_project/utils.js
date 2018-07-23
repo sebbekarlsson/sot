@@ -2,7 +2,7 @@ function nice_print(out) {
     console.log('*** ' + out + ' ***');
 }
 
-function noop() {};
+function noop() {}; //no operation
 
 function createDivWithH1 () {
     return HTML`

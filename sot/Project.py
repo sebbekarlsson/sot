@@ -62,11 +62,8 @@ class Project(object):
 
     def transpile(self, filepath=None, out=None):
         for transpiler in self.get_transpilers():
-            if out:
-                out = transpiler.execute(out)
-            else:
-                out = read_and_close(filepath)
-                out = transpiler.execute(out)
+            out = transpiler.execute_contents(out) if out else\
+                transpiler.execute(filepath)
 
         return self.write_transpiled(filepath, out) if filepath and out else\
             out

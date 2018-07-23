@@ -5,7 +5,12 @@ from bs4 import BeautifulSoup
 
 
 def run():
-    contents = sys.argv[1]
+    infile = sys.argv[1]
+    contents = ''
+
+    with open(infile) as _file:
+        contents = _file.read()
+    _file.close()
 
     htmls = re.findall(r'(HTML`([\s\S]*)`)', contents)
 

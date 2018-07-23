@@ -1,7 +1,7 @@
 {
     "main": "main.js",
     "out": "bundle.js",
-    "watch": ["*.js"],
+    "watch": ["*.js", "*.ts"],
     "transpilers": [
         {
             "path": "./require.py"

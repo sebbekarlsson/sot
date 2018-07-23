@@ -6,7 +6,12 @@ from sot.Project import Project
 
 def run():
     project = Project()
-    indata = sys.argv[1]
+    infile = sys.argv[1]
+    indata = ''
+
+    with open(infile) as _file:
+        indata = _file.read()
+    _file.close()
 
     requires = re.findall(r'(require\((\'|\")(.*?)(\'|\")\))', indata)
 

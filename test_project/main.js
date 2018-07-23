@@ -1,6 +1,6 @@
 require('helpers.js');
 
-
+// main method
 function main () {
     nice_print('This is the main file!');
     nice_print(add(2, 8));
@@ -10,4 +10,4 @@ function main () {
     console.log(x);
 };
 
-main(); // run now
+main();

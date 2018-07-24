@@ -1,13 +1,16 @@
 require('helpers.js');
+require('Greeter.ts');
 
-// main method
+
+
 function main () {
     nice_print('This is the main file!');
     nice_print(add(2, 8));
 
-    var x = createDivWithH1();
+    var greeter = new Greeter();
 
-    console.log(x);
+    nice_print(createDivWithH1());
+    nice_print(greeter.greet());
 };
 
 main();

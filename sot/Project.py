@@ -1,94 +1,58 @@
 import json
 import os
 import time
-import ntpath
 from watchdog.observers import Observer
 from read_and_close import read_and_close
 from sot.Watcher import Watcher
+from sot.Transpiler import Transpiler
 from sot.utils import try_except, loop
 from sot.constants import SOT_PROJECT_CONFIG
-from sot.Transpiler import Transpiler
+from sot.exceptions import NoConfigException, ConfigMissingAttribute
 
 
 class Project(object):
 
     def __init__(self, path='.'):
         self.path = path
-        self.config_path = os.path.join(path, SOT_PROJECT_CONFIG)
-        self.config = self.get_config()
-        self.watcher = Watcher(self, self.get_watch_patterns())
+        self.config = self.get_config(os.path.join(path, SOT_PROJECT_CONFIG))
+        self.watcher = Watcher(self, self.config['watch'])
         self.observer = Observer()
 
-    def get_config(self):
-        return json.loads(read_and_close(self.config_path))\
-            if os.path.isfile(self.config_path) else {}
+    def validate_config(self, config):
+        requirements = ['watch', 'main', 'out']
+
+        for requirement in requirements:
+            if requirement not in config:
+                raise ConfigMissingAttribute(requirement)
+
+        return config
+
+    def get_config(self, path):
+        if not os.path.isfile(path):
+            raise NoConfigException()
+
+        contents = read_and_close(path)
+
+        return self.validate_config(json.loads(contents) if contents else {})
 
     def get_transpilers(self):
-        return try_except(
-            lambda x: map(
-                lambda x: Transpiler(**x),
-                self.get_config()['transpilers']
-            ),
-            KeyError,
-            lambda x: []
-        )
+        return map(lambda x: Transpiler(**x), self.config['transpilers'])\
+            if 'transpilers' in self.config else []
 
-    def get_main_file(self):
-        return os.path.join(self.path, self.get_config_attr('main')) if\
-            self.get_config_attr('main') else None
-
-    def get_output_file(self):
-        return os.path.join(self.path, self.get_config_attr('out')) if\
-            self.get_config_attr('out') else None
-
-    def get_config_attr(self, attribute, default=None):
-        return try_except(
-            lambda x: self.get_config()[attribute],
-            KeyError,
-            lambda x: default
-        )
-
-    def get_watch_patterns(self):
-        config = self.get_config()
-
-        return config['watch'] if 'watch' in config else []
-
-    def write_transpiled(self, filename, contents):
-        with open(self.get_transpiled_name(filename), 'w+') as _file:
-            _file.write(contents)
-        _file.close()
-
-        return contents
-
-    def transpile(self, filepath=None, out=None):
+    def transpile(self, out='', ext=None, bundle=True):
         for transpiler in self.get_transpilers():
-            out = transpiler.execute_contents(out) if out else\
-                transpiler.execute(filepath)
+            out = transpiler.send_contents(out, ext)
 
-        return self.write_transpiled(filepath, out) if filepath and out else\
-            out
+        return self.bundle(out) if bundle else out
 
-    def get_transpiled_name(self, filename):
-        basename = ntpath.basename(filename)
-        return filename.replace(basename, '.' + basename) + '.sot'
+    def bundle(self, out):
+        out_fname = os.path.join(self.path, self.config['out'])
 
-    def get_file_contents(self, filename, force=False):
-        contents = ''
-
-        with open(filename) as _file:
-            contents = _file.read()
+        with open(out_fname, 'w+') as _file:
+            _file.write(out)
         _file.close()
 
-        return contents
-
-    def bundle(self):
-        with open(self.get_output_file(), 'w+') as _file:
-            _file.write(
-                self.get_file_contents(
-                    self.get_transpiled_name(self.get_main_file())
-                )
-            )
-        _file.close()
+        return out
 
     def _watcher(self, args):
         self.observer.start()

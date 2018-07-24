@@ -25,7 +25,7 @@ def watch():
         '{}{}{}'.format(
             Colors.OKGREEN,
             'SOT watchdog started [{}]'.format(
-                ', '.join(project.get_watch_patterns())),
+                ', '.join(project.config['watch'])),
             Colors.ENDC
         )
     )

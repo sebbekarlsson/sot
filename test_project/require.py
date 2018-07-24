@@ -22,7 +22,8 @@ def run():
             contents = _file.read()
         _file.close()
 
-        indata = indata.replace(req[0] + ';', project.transpile(out=contents))
+        indata = indata.replace(req[0] + ';', project.transpile(
+            out=contents, ext=req[2].split('.')[1]))
 
     print(indata)
 

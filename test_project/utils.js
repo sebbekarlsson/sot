@@ -1,13 +1,12 @@
-function nice_print(out) {
-    console.log('*** ' + out + ' ***');
+// just a print method
+function nice_print(stdout) {
+    console.log('*** ' + stdout + ' ***');
 }
 
-function noop() {}; //no operation
-
-function createDivWithH1 () {
+function createDivWithH1() {
     return HTML`
         <div>
-            <h1>THIS IS A DIV WITH H1</h1>
+            <h1>Hello World</h1>
         </div>
     `;
 };

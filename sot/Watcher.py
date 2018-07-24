@@ -1,4 +1,5 @@
 from watchdog.events import PatternMatchingEventHandler
+from read_and_close import read_and_close
 from sot.Colors import Colors
 
 
@@ -22,8 +23,7 @@ class Watcher(PatternMatchingEventHandler):
         event.src_path
             path/to/observed/file
         """
-
-        if self.project.get_output_file() in event.src_path:
+        if self.project.config['out'] in event.src_path:
             return
 
         print('{}{}{}'.format(
@@ -33,20 +33,7 @@ class Watcher(PatternMatchingEventHandler):
             Colors.ENDC
         ))
 
-        self.project.transpile(event.src_path)
-
-        if self.process_main_file(self.project.get_main_file()):
-            self.project.bundle()
-
-            print('{}{}{}'.format(
-                Colors.OKGREEN,
-                'Wrote bundle: {}{}{}'.format(
-                    Colors.OKBLUE,
-                    self.project.get_output_file(),
-                    Colors.ENDC
-                ),
-                Colors.ENDC
-            ))
+        self.project.transpile(read_and_close(self.project.config['main']))
 
     def on_modified(self, event):
         self.process(event)

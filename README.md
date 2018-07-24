@@ -60,7 +60,7 @@
 > Once you have the `sot.json` file in your project, you can start the `SOT`
 > watchdog by running:
 
-    $ sot --watch .
+    $ sot .
 
 > while standing in your project.  
 > This will write the `bundle` file that we specified above whenever a file
